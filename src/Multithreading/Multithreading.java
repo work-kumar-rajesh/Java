@@ -6,11 +6,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /*
-=======================================
-BASICS
-=======================================
+========================================================================================
+                                BASICS
+========================================================================================
 
 CPU :
 The CPU (Central Processing Unit) is the brain of the computer where computation
@@ -92,9 +93,9 @@ thread.This thread is responsible for executing the main method of the program .
 */
 
 /*
-=======================================
-SIMPLE PROGRAM
-=======================================
+========================================================================================
+                                SIMPLE PROGRAM
+========================================================================================
 */
 public class Multithreading {
     public static void main(String[] args) {
@@ -103,9 +104,9 @@ public class Multithreading {
 }
 
 /*
-=======================================
-USING THREAD CLASS
-=======================================
+========================================================================================
+                                USING THREAD CLASS
+========================================================================================
 */
 class PrintWorld extends Thread {
     @Override
@@ -130,9 +131,9 @@ class PrintWorldMainClass {
 }
 
 /*
-=======================================
-USING RUNNABLE INTERFACE
-=======================================
+========================================================================================
+                            USING RUNNABLE INTERFACE
+========================================================================================
 */
 class PrintHello implements Runnable {
     @Override
@@ -182,9 +183,9 @@ class PrintHelloMainClass {
 }
 
 /*
-=======================================
-THREAD LIFECYCLE
-=======================================
+========================================================================================
+                                THREAD LIFECYCLE
+========================================================================================
 
 1. New - A thread is in this state when it is created but not yet started.
 2. Runnable - After the start method is called , the thread becomes runnable,it is  ready to
@@ -219,9 +220,9 @@ class ThreadStates extends Thread {
 }
 
 /*
-=======================================
-THREAD METHODS
-=======================================
+========================================================================================
+                                THREAD METHODS
+========================================================================================
 */
 class ThreadMethods extends Thread {
     @Override
@@ -263,9 +264,9 @@ class ThreadMethods extends Thread {
 }
 
 /*
-=======================================
-SYNCHRONIZATION
-=======================================
+========================================================================================
+                                SYNCHRONIZATION
+========================================================================================
 
 
 Synchronization is a mechanism in Java used in a multithreaded environment to control access to shared resources.
@@ -336,6 +337,7 @@ class Counter {
         // count++;   // ❌ NOT thread-safe
 
         /*
+
         ===============================SYNCHRONIZED BLOCK===============================
         synchronized(this) means:
         → Lock the current Counter object
@@ -390,9 +392,9 @@ class Synchronization {
 }
 
 /*
-=======================================
-LOCKS (java.util.concurrent.locks)
-=======================================
+========================================================================================
+                                LOCKS (java.util.concurrent.locks)
+========================================================================================
 
 Locks in Java provide a more flexible and powerful mechanism for thread synchronization
 than the 'synchronized' keyword.
@@ -721,9 +723,9 @@ class WaitNotifyDemo {
 }
 
 /*
-=======================================
-JAVA THREAD POOL
-=======================================
+========================================================================================
+                                JAVA THREAD POOL
+========================================================================================
 
 Core Explanation and Analogy
 Scenario Setup:
@@ -760,9 +762,9 @@ thus optimizing resource usage and ensuring better control over concurrent proce
 */
 
 /*
-=======================================
-Executor Framework
-=======================================
+========================================================================================
+                                Executor Framework
+========================================================================================
 
 Core Concepts and Motivation
 Executors Framework abstracts and simplifies thread creation, scheduling, and management in Java,
@@ -941,12 +943,14 @@ class FutureCompleteDemo {
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
+
         // TASK 1 : FINISHES NORMALLY
         Callable<Integer> fastTask = () -> {
             Thread.sleep(1000);
             System.out.println("Fast task completed");
             return 10;
         };
+
 
         // TASK 2 : LONG RUNNING TASK
         Callable<Integer> slowTask = () -> {
@@ -964,9 +968,11 @@ class FutureCompleteDemo {
         Future<Integer> future1 = executor.submit(fastTask);
         Future<Integer> future2 = executor.submit(slowTask);
 
+
         // CHECK STATUS (isDone)
         System.out.println("Future1 done? " + future1.isDone());
         System.out.println("Future2 done? " + future2.isDone());
+
 
         // GET WITH TIMEOUT
         try {
@@ -975,14 +981,17 @@ class FutureCompleteDemo {
             System.out.println("Future1 timed out");
         }
 
+
         // CANCEL SLOW TASK
         Thread.sleep(2000);
         System.out.println("Cancelling slow task...");
         future2.cancel(true);
 
+
         // CHECK CANCELLATION STATUS
         System.out.println("Future2 cancelled? " + future2.isCancelled());
         System.out.println("Future2 done? " + future2.isDone());
+
 
         // SHUTDOWN EXECUTOR
         executor.shutdown();
@@ -993,9 +1002,9 @@ class FutureCompleteDemo {
 }
 
 /*
-=======================================
-COUNTDOWNLATCH
-=======================================
+========================================================================================
+                                COUNTDOWNLATCH
+========================================================================================
 
 PROBLEM IT SOLVES:
 In multithreading, sometimes we want a thread (usually main) to wait until
@@ -1008,6 +1017,7 @@ CountDownLatch simplifies this:
 - You give it a count
 - Other threads call countDown() when they finish
 - Waiting threads call await() and automatically continue when count reaches 0
+
 
 KEY METHODS
 
@@ -1072,19 +1082,13 @@ class MultipleWaitersDemo {
         new Thread(waiter, "Waiter-2").start();
 
         new Thread(() -> {
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
-            }
+            try { Thread.sleep(1000); } catch (Exception e) {}
             latch.countDown();
             System.out.println("Task-1 done");
         }).start();
 
         new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (Exception e) {
-            }
+            try { Thread.sleep(2000); } catch (Exception e) {}
             latch.countDown();
             System.out.println("Task-2 done");
         }).start();
@@ -1098,26 +1102,21 @@ class AwaitTimeoutDemo {
         CountDownLatch latch = new CountDownLatch(1);
 
         Thread t = new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-            }
+            try { Thread.sleep(5000); } catch (InterruptedException e) {}
             latch.countDown();
         });
         t.start();
 
         boolean completed = latch.await(2, java.util.concurrent.TimeUnit.SECONDS);
-        if (completed)
-            System.out.println("Task completed within timeout");
-        else
-            System.out.println("Timeout occurred, proceeding anyway");
+        if(completed) System.out.println("Task completed within timeout");
+        else System.out.println("Timeout occurred, proceeding anyway");
     }
 }
 
 /*
-=======================================
-CYCLICBARRIER
-=======================================
+========================================================================================
+                                CYCLICBARRIER
+========================================================================================
 
 PROBLEM IT SOLVES:
 Sometimes in multithreading, we want a group of threads to wait for each other
@@ -1151,7 +1150,7 @@ class CyclicBarrierBasicDemo {
         Runnable worker = () -> {
             try {
                 System.out.println(Thread.currentThread().getName() + " performing work");
-                Thread.sleep((long) (Math.random() * 2000));
+                Thread.sleep((long)(Math.random() * 2000));
                 System.out.println(Thread.currentThread().getName() + " waiting at barrier");
                 barrier.await(); // wait for others
                 System.out.println(Thread.currentThread().getName() + " passed barrier");
@@ -1166,8 +1165,10 @@ class CyclicBarrierBasicDemo {
     }
 }
 
-// REUSABILITY EXAMPLE
-// CyclicBarrier can be reused after tripping. Threads can use it again in next cycle.
+
+
+//REUSABILITY EXAMPLE
+//CyclicBarrier can be reused after tripping. Threads can use it again in next cycle.
 class CyclicBarrierReusableDemo {
     public static void main(String[] args) {
 
@@ -1175,9 +1176,9 @@ class CyclicBarrierReusableDemo {
 
         Runnable worker = () -> {
             try {
-                for (int i = 1; i <= 2; i++) {
+                for(int i = 1; i <= 2; i++) {
                     System.out.println(Thread.currentThread().getName() + " working cycle " + i);
-                    Thread.sleep((long) (Math.random() * 1000));
+                    Thread.sleep((long)(Math.random() * 1000));
                     barrier.await(); // wait for other thread
                 }
             } catch (InterruptedException | BrokenBarrierException e) {
@@ -1190,8 +1191,9 @@ class CyclicBarrierReusableDemo {
     }
 }
 
-// AWAIT WITH TIMEOUT
-// Avoid waiting forever; if some thread is delayed, proceed or handle exception
+
+//AWAIT WITH TIMEOUT
+//Avoid waiting forever; if some thread is delayed, proceed or handle exception
 class CyclicBarrierTimeoutDemo {
     public static void main(String[] args) {
 
@@ -1209,17 +1211,181 @@ class CyclicBarrierTimeoutDemo {
         }, "Thread-1").start();
 
         new Thread(() -> {
-            try {
-                Thread.sleep(5000);
-            } catch (Exception e) {
-            }
-            try {
-                barrier.await();
-            } catch (Exception e) {
-            }
+            try { Thread.sleep(5000); } catch (Exception e) {}
+            try { barrier.await(); } catch (Exception e) {}
         }, "Thread-2").start();
     }
 }
 
+/*
+========================================================================================
+                        VOLATILE AND ATOMIC VARIABLES
+========================================================================================
 
-// TWO TOPICS REMAINING - 1 . CompletableFuture  2 . Volatile and Atomic
+In multithreading, issues arise mainly due to:
+- Visibility problems (threads not seeing latest updates)
+- Atomicity problems (operations not executing as a single unit)
+
+Java provides two different solutions:
+1. volatile keyword        → solves VISIBILITY problem
+2. Atomic variables        → solve ATOMICITY + VISIBILITY problem
+
+
+
+=============================== VOLATILE KEYWORD ===============================
+*/
+
+class VolatileFlagDemo {
+    // here if running is not volatile the thread keeps running forever
+    private static volatile boolean running = true;
+
+    public static void main(String[] args) throws InterruptedException {
+
+        Thread worker = new Thread(() -> {
+            System.out.println("Worker thread started");
+            while (running) {
+                // busy waiting
+                System.out.println("working thread running");
+            }
+            System.out.println("Worker thread stopped");
+        });
+
+        worker.start();
+
+        Thread.sleep(2000);
+        System.out.println("Main thread stopping worker");
+        running = false;
+    }
+}
+
+/*
+==================================WHY volatile IS NOT ENOUGH==================================
+
+EXPLANATION:
+Even though volatile guarantees visibility, it does NOT make
+compound operations atomic.
+
+count++ consists of:
+1. Read
+2. Increment
+3. Write
+
+Multiple threads can interleave these steps, causing data loss.
+*/
+
+class VolatileCounterProblem {
+
+    private static volatile int count = 0;
+
+    public static void main(String[] args) throws InterruptedException {
+
+        Runnable task = () -> {
+            for (int i = 0; i < 1000; i++) {
+                count++; // NOT atomic
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println("Final Count: " + count);
+    }
+}
+
+
+/*
+==================================ATOMIC VARIABLES==================================
+
+Atomic variables are part of:
+java.util.concurrent.atomic package
+
+PROBLEM THEY SOLVE:
+- Atomicity issues
+- Visibility issues
+
+FEATURES:
+- Thread-safe compound operations
+- Lock-free (uses CAS - Compare And Swap)
+- Better performance than synchronized in many cases
+
+COMMON ATOMIC CLASSES:
+- AtomicInteger
+- AtomicLong
+- AtomicBoolean
+- AtomicReference
+
+Atomic operations execute as a SINGLE, indivisible step,
+so no two threads can interfere with each other.
+
+==================================ATOMIC RUNNABLE DEMO==================================
+
+EXPLANATION:
+Multiple threads increment a shared AtomicInteger.
+incrementAndGet() is atomic, so no updates are lost.
+Final output is always correct without synchronization.
+*/
+
+class AtomicCounterDemo {
+
+    private static AtomicInteger counter = new AtomicInteger(0);
+
+    public static void main(String[] args) throws InterruptedException {
+
+        Runnable task = () -> {
+            for (int i = 0; i < 1000; i++) {
+                counter.incrementAndGet();
+            }
+        };
+
+        Thread t1 = new Thread(task);
+        Thread t2 = new Thread(task);
+
+        t1.start();
+        t2.start();
+
+        t1.join();
+        t2.join();
+
+        System.out.println("Final Counter Value: " + counter.get());
+    }
+}
+
+
+/*
+==================================VOLATILE vs ATOMIC==================================
+volatile:
+- Guarantees visibility
+- Does NOT guarantee atomicity
+- No locking
+
+Atomic:
+- Guarantees visibility
+- Guarantees atomicity
+- Lock-free and thread-safe
+
+==================================WHEN TO USE WHAT==================================
+
+Use volatile when:
+- One thread updates a variable
+- Other threads only read it
+- No compound operations
+
+Use Atomic variables when:
+- Multiple threads update shared data
+- Atomic operations are required
+- Performance is important
+
+Use synchronized / locks when:
+- Multiple shared variables must be updated together
+- Complex critical sections exist
+*/
+
+
+
+// TOPICS REMAINING - 1 . CompletableFuture
