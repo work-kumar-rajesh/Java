@@ -1,11 +1,11 @@
 package Multithreading;
+
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.BrokenBarrierException;
-
 
 /*
 =======================================
@@ -91,7 +91,6 @@ When a java program starts one thread begins running immediately , which is call
 thread.This thread is responsible for executing the main method of the program .
 */
 
-
 /*
 =======================================
 SIMPLE PROGRAM
@@ -102,7 +101,6 @@ public class Multithreading {
         System.out.println("Hello");
     }
 }
-
 
 /*
 =======================================
@@ -130,7 +128,6 @@ class PrintWorldMainClass {
         }
     }
 }
-
 
 /*
 =======================================
@@ -184,7 +181,6 @@ class PrintHelloMainClass {
     }
 }
 
-
 /*
 =======================================
 THREAD LIFECYCLE
@@ -199,7 +195,6 @@ THREAD LIFECYCLE
 5. Terminated - A thread is in this state when it has finished executing.
 
 */
-
 class ThreadStates extends Thread {
     @Override
     public void run() {
@@ -223,23 +218,20 @@ class ThreadStates extends Thread {
     }
 }
 
-
-
 /*
 =======================================
 THREAD METHODS
 =======================================
 */
-
 class ThreadMethods extends Thread {
     @Override
     public void run() {
         try {
-            Thread.sleep(100);             // Sleep method to pause thread execution
+            Thread.sleep(100); // Sleep method to pause thread execution
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        for( int i = 0 ; i < 100 ; i++) {
+        for (int i = 0; i < 100; i++) {
             System.out.println("Running");
 
             /*
@@ -253,13 +245,13 @@ class ThreadMethods extends Thread {
     }
 
     public static void main(String[] args) throws InterruptedException {
-        ThreadMethods t1 = new ThreadMethods() ;
+        ThreadMethods t1 = new ThreadMethods();
         t1.start();                              // Start method start thread execution
         t1.join();                               //  blocking method to wait for t1 to finish
         t1.setPriority(Thread.MAX_PRIORITY);     // just an indication to jvm  does not guarantee first execution if multiple thread are there
         t1.interrupt();
 
-         /*
+        /*
          Daemon
          All threads are by default non daemon threads that means jvm waits for their execution even if
          main thread is completed .
@@ -269,8 +261,6 @@ class ThreadMethods extends Thread {
         t1.setDaemon(true);
     }
 }
-
-
 
 /*
 =======================================
@@ -311,7 +301,6 @@ In a synchronized block:
 - Non-critical code can run concurrently
 - Provides better performance and flexibility
 */
-
 class UtilizeCounter extends Thread {
     private final Counter counter;
 
@@ -320,15 +309,15 @@ class UtilizeCounter extends Thread {
     }
 
     @Override
-    public void run(){
-        for( int i = 0 ; i < 1000 ; i++ ) {
+    public void run() {
+        for (int i = 0; i < 1000; i++) {
             counter.increment();
         }
     }
 }
 
 class Counter {
-    private int count = 0 ;
+    private int count = 0;
 
     public void increment() {
 
@@ -347,7 +336,6 @@ class Counter {
         // count++;   // ❌ NOT thread-safe
 
         /*
-
         ===============================SYNCHRONIZED BLOCK===============================
         synchronized(this) means:
         → Lock the current Counter object
@@ -356,7 +344,7 @@ class Counter {
         → count++ becomes thread-safe
         → Final output will ALWAYS be 2000
         */
-        synchronized (this) {   // ✅ thread-safe
+        synchronized (this) { // ✅ thread-safe
             count++;
         }
     }
@@ -375,7 +363,7 @@ class Counter {
 
 class Synchronization {
     public static void main(String[] args) throws InterruptedException {
-        Counter myCounter = new Counter() ;
+        Counter myCounter = new Counter();
 
         UtilizeCounter t1 = new UtilizeCounter(myCounter);
         UtilizeCounter t2 = new UtilizeCounter(myCounter);
@@ -401,8 +389,6 @@ class Synchronization {
     }
 }
 
-
-
 /*
 =======================================
 LOCKS (java.util.concurrent.locks)
@@ -424,7 +410,6 @@ Locks allow:
 - Read-write separation
 - Deadlock avoidance
 */
-
 // ==================== EXPLICIT LOCKING ====================
 // EXPLANATION:
 // Unlike synchronized, where locking is automatic, ReentrantLock allows the programmer
@@ -522,8 +507,6 @@ One more notable thing interrupt() can be called normally anytime on thread and 
 will interrupt thread if it's doing some waiting action like sleep, wait or join
 otherwise thread will continue working normally .
 */
-
-
 class InterruptibleLockDemo {
     // Declare as ReentrantLock to access isHeldByCurrentThread()
     private final ReentrantLock lock = new ReentrantLock();
@@ -631,13 +614,21 @@ class ProducerConsumerTest {
 
         Thread producer = new Thread(() -> {
             for (int i = 1; i <= 5; i++) {
-                try { buffer.produce(i); } catch (InterruptedException e) { e.printStackTrace(); }
+                try {
+                    buffer.produce(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
         Thread consumer = new Thread(() -> {
             for (int i = 1; i <= 5; i++) {
-                try { buffer.consume(); } catch (InterruptedException e) { e.printStackTrace(); }
+                try {
+                    buffer.consume();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -706,7 +697,11 @@ class WaitNotifyDemo {
         Thread consumer = new Thread(() -> {
             synchronized (lock) {
                 while (!ready) {
-                    try { lock.wait(); } catch (InterruptedException e) { e.printStackTrace(); }
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
                 System.out.println("Consumer received signal!");
             }
@@ -724,8 +719,6 @@ class WaitNotifyDemo {
         producer.start();
     }
 }
-
-
 
 /*
 =======================================
@@ -753,9 +746,9 @@ Instead of creating and destroying a thread for each task, threads are reused, i
 Key Benefits of Thread Pools:
 
 Benefits
-Resource Management	: Creating and destroying threads for every task is expensive and resource-intensive.
-Reduced Overhead : 	Thread creation and destruction add overhead; thread pools minimize this by reusing threads.
-Improved Response Time	: Pre-initialized threads are immediately available, reducing waiting time and speeding up execution.
+Resource Management    : Creating and destroying threads for every task is expensive and resource-intensive.
+Reduced Overhead       : Thread creation and destruction add overhead; thread pools minimize this by reusing threads.
+Improved Response Time : Pre-initialized threads are immediately available, reducing waiting time and speeding up execution.
 Control Over Thread Count: Limits the maximum number of threads, preventing resource exhaustion from creating too many threads.
 Problem Without Thread Pools:
 Creating a new thread for each task leads to heavy overhead, inefficient memory use,
@@ -765,8 +758,6 @@ How Thread Pools Solve These Problems:
 By maintaining a fixed pool of threads, the system avoids repeatedly creating and destroying threads,
 thus optimizing resource usage and ensuring better control over concurrent processing.
 */
-
-
 
 /*
 =======================================
@@ -789,13 +780,13 @@ The framework supports thread reuse via thread pools, improving performance and 
 Executor :
 Basic interface with method execute(Runnable command) to run tasks asynchronously.
 
-ExecutorService	:
+ExecutorService    :
 Extends Executor, adds lifecycle management (shutdown, awaitTermination) and task submission with submit(). Supports Future results.
 
 ScheduledExecutorService :
 Extends ExecutorService, supports delayed and periodic task execution (schedule(), scheduleAtFixedRate()).
 
-Executors (Utility Class)	:
+Executors (Utility Class)    :
 Provides factory methods to create different types of thread pools (fixed, single, cached).
 
 ==================== MANUAL THREAD CREATION vs EXECUTOR  FRAMEWORK====================
@@ -815,10 +806,10 @@ isShutdown(), isTerminated() check executor status.
 
 
 ==================== RUNNABLE vs CALLABLE ====================
-Feature	                            Runnable	                                Callable
-Return Value	        None (void run())	                    Returns a value (call())
-Exception Handling	    Cannot throw checked exceptions	        Can throw exceptions
-Usage	                When no return value needed	            When a result is expected
+Feature                                Runnable                                Callable
+Return Value            None (void run())                    Returns a value (call())
+Exception Handling        Cannot throw checked exceptions            Can throw exceptions
+Usage                    When no return value needed                When a result is expected
                         simpler but limited;                    supports return values and exceptions.
 ***  submit() overloads support both types.
 
@@ -842,18 +833,17 @@ Shutdown behavior requires explicit handling to avoid premature termination of p
 
 For periodic tasks, proper shutdown management is critical to avoid tasks running indefinitely.
 Types of Thread Pools via Executors
-Thread Pool Type	Description	Use Case
-FixedThreadPool	Fixed number of threads reused for tasks	When task load is steady and predictable
-SingleThreadExecutor	Single thread executor for sequential execution	Serial task execution
-CachedThreadPool	Dynamically sized pool, creates new threads as needed, reuses idle threads,
-removes threads after 60 seconds inactivity	When load is variable and tasks are short-lived
+Thread Pool Type    Description    Use Case
+FixedThreadPool    Fixed number of threads reused for tasks    When task load is steady and predictable
+SingleThreadExecutor    Single thread executor for sequential execution    Serial task execution
+CachedThreadPool    Dynamically sized pool, creates new threads as needed, reuses idle threads,
+removes threads after 60 seconds inactivity    When load is variable and tasks are short-lived
 Cached thread pools can grow unbounded, which may lead to resource exhaustion under heavy load.
 Choosing thread pool type depends on application needs and load characteristics.
-
 */
 
-//Guarantees order
-//Useful for logging, file writes, sequential tasks
+// Guarantees order
+// Useful for logging, file writes, sequential tasks
 class SingleThreadExecutorDemo {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -866,8 +856,7 @@ class SingleThreadExecutorDemo {
     }
 }
 
-
-//Reuses a fixed number of threads
+// Reuses a fixed number of threads
 class FixedThreadPoolDemo {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -883,9 +872,8 @@ class FixedThreadPoolDemo {
     }
 }
 
-
-//Best for short-lived tasks
-//Threads created as needed, reused if idle
+// Best for short-lived tasks
+// Threads created as needed, reused if idle
 class CachedThreadPoolDemo {
     public static void main(String[] args) {
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -900,7 +888,6 @@ class CachedThreadPoolDemo {
         executor.shutdown();
     }
 }
-
 
 // Callable → returns value
 // Future.get() blocks until result is ready
@@ -921,8 +908,7 @@ class CallableDemo {
     }
 }
 
-
-//SCHEDULED EXECUTOR (Delayed Task)
+// SCHEDULED EXECUTOR (Delayed Task)
 class ScheduledDemo {
     public static void main(String[] args) {
         ScheduledExecutorService scheduler =
@@ -936,9 +922,8 @@ class ScheduledDemo {
     }
 }
 
-
-//PERIODIC TASK (Fixed Rate)
-//Runs forever unless shutdown
+// PERIODIC TASK (Fixed Rate)
+// Runs forever unless shutdown
 class ScheduledFixedRateDemo {
     public static void main(String[] args) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
@@ -949,14 +934,12 @@ class ScheduledFixedRateDemo {
     }
 }
 
-
-//FUTURE OBJECT EXAMPLE
+// FUTURE OBJECT EXAMPLE
 class FutureCompleteDemo {
 
     public static void main(String[] args) throws Exception {
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
-
 
         // TASK 1 : FINISHES NORMALLY
         Callable<Integer> fastTask = () -> {
@@ -964,7 +947,6 @@ class FutureCompleteDemo {
             System.out.println("Fast task completed");
             return 10;
         };
-
 
         // TASK 2 : LONG RUNNING TASK
         Callable<Integer> slowTask = () -> {
@@ -982,11 +964,9 @@ class FutureCompleteDemo {
         Future<Integer> future1 = executor.submit(fastTask);
         Future<Integer> future2 = executor.submit(slowTask);
 
-
         // CHECK STATUS (isDone)
         System.out.println("Future1 done? " + future1.isDone());
         System.out.println("Future2 done? " + future2.isDone());
-
 
         // GET WITH TIMEOUT
         try {
@@ -995,17 +975,14 @@ class FutureCompleteDemo {
             System.out.println("Future1 timed out");
         }
 
-
         // CANCEL SLOW TASK
         Thread.sleep(2000);
         System.out.println("Cancelling slow task...");
         future2.cancel(true);
 
-
         // CHECK CANCELLATION STATUS
         System.out.println("Future2 cancelled? " + future2.isCancelled());
         System.out.println("Future2 done? " + future2.isDone());
-
 
         // SHUTDOWN EXECUTOR
         executor.shutdown();
@@ -1014,8 +991,6 @@ class FutureCompleteDemo {
         System.out.println("Executor shut down");
     }
 }
-
-
 
 /*
 =======================================
@@ -1034,7 +1009,6 @@ CountDownLatch simplifies this:
 - Other threads call countDown() when they finish
 - Waiting threads call await() and automatically continue when count reaches 0
 
-
 KEY METHODS
 
 - new CountDownLatch(n)        → create latch with count n
@@ -1048,8 +1022,6 @@ Rules:
 - Once count reaches 0, all waiting threads are released forever
 
 */
-
-
 class CountDownLatchBasicDemo {
 
     public static void main(String[] args) throws InterruptedException {
@@ -1077,11 +1049,9 @@ class CountDownLatchBasicDemo {
     }
 }
 
-
-
-//MULTIPLE WAITERS EXAMPLE
-//More than one thread can wait on the same latch.
-//All waiting threads are released when count reaches 0
+// MULTIPLE WAITERS EXAMPLE
+// More than one thread can wait on the same latch.
+// All waiting threads are released when count reaches 0
 class MultipleWaitersDemo {
 
     public static void main(String[] args) {
@@ -1102,39 +1072,47 @@ class MultipleWaitersDemo {
         new Thread(waiter, "Waiter-2").start();
 
         new Thread(() -> {
-            try { Thread.sleep(1000); } catch (Exception e) {}
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+            }
             latch.countDown();
             System.out.println("Task-1 done");
         }).start();
 
         new Thread(() -> {
-            try { Thread.sleep(2000); } catch (Exception e) {}
+            try {
+                Thread.sleep(2000);
+            } catch (Exception e) {
+            }
             latch.countDown();
             System.out.println("Task-2 done");
         }).start();
     }
 }
 
-
-//AWAIT WITH TIMEOUT
-//Avoid infinite waiting if some threads are delayed
+// AWAIT WITH TIMEOUT
+// Avoid infinite waiting if some threads are delayed
 class AwaitTimeoutDemo {
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch latch = new CountDownLatch(1);
 
         Thread t = new Thread(() -> {
-            try { Thread.sleep(5000); } catch (InterruptedException e) {}
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
             latch.countDown();
         });
         t.start();
 
         boolean completed = latch.await(2, java.util.concurrent.TimeUnit.SECONDS);
-        if(completed) System.out.println("Task completed within timeout");
-        else System.out.println("Timeout occurred, proceeding anyway");
+        if (completed)
+            System.out.println("Task completed within timeout");
+        else
+            System.out.println("Timeout occurred, proceeding anyway");
     }
 }
-
-
 
 /*
 =======================================
@@ -1165,7 +1143,6 @@ Rules:
 - If a thread is interrupted or times out, the barrier is broken → BrokenBarrierException
 
 */
-
 class CyclicBarrierBasicDemo {
     public static void main(String[] args) {
 
@@ -1174,7 +1151,7 @@ class CyclicBarrierBasicDemo {
         Runnable worker = () -> {
             try {
                 System.out.println(Thread.currentThread().getName() + " performing work");
-                Thread.sleep((long)(Math.random() * 2000));
+                Thread.sleep((long) (Math.random() * 2000));
                 System.out.println(Thread.currentThread().getName() + " waiting at barrier");
                 barrier.await(); // wait for others
                 System.out.println(Thread.currentThread().getName() + " passed barrier");
@@ -1189,10 +1166,8 @@ class CyclicBarrierBasicDemo {
     }
 }
 
-
-
-//REUSABILITY EXAMPLE
-//CyclicBarrier can be reused after tripping. Threads can use it again in next cycle.
+// REUSABILITY EXAMPLE
+// CyclicBarrier can be reused after tripping. Threads can use it again in next cycle.
 class CyclicBarrierReusableDemo {
     public static void main(String[] args) {
 
@@ -1200,9 +1175,9 @@ class CyclicBarrierReusableDemo {
 
         Runnable worker = () -> {
             try {
-                for(int i = 1; i <= 2; i++) {
+                for (int i = 1; i <= 2; i++) {
                     System.out.println(Thread.currentThread().getName() + " working cycle " + i);
-                    Thread.sleep((long)(Math.random() * 1000));
+                    Thread.sleep((long) (Math.random() * 1000));
                     barrier.await(); // wait for other thread
                 }
             } catch (InterruptedException | BrokenBarrierException e) {
@@ -1215,9 +1190,8 @@ class CyclicBarrierReusableDemo {
     }
 }
 
-
-//AWAIT WITH TIMEOUT
-//Avoid waiting forever; if some thread is delayed, proceed or handle exception
+// AWAIT WITH TIMEOUT
+// Avoid waiting forever; if some thread is delayed, proceed or handle exception
 class CyclicBarrierTimeoutDemo {
     public static void main(String[] args) {
 
@@ -1235,9 +1209,17 @@ class CyclicBarrierTimeoutDemo {
         }, "Thread-1").start();
 
         new Thread(() -> {
-            try { Thread.sleep(5000); } catch (Exception e) {}
-            try { barrier.await(); } catch (Exception e) {}
+            try {
+                Thread.sleep(5000);
+            } catch (Exception e) {
+            }
+            try {
+                barrier.await();
+            } catch (Exception e) {
+            }
         }, "Thread-2").start();
     }
 }
 
+
+// TWO TOPICS REMAINING - 1 . CompletableFuture  2 . Volatile and Atomic
