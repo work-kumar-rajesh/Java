@@ -1,4 +1,4 @@
-package Multithreading;
+package CoreJava.Multithreading;
 
 import java.util.concurrent.*;
 import java.util.concurrent.locks.*;
@@ -55,11 +55,11 @@ Example: Browsing the web while listening to music and editing a document.
 
 
 MULTITHREADING :
-Multithreading.Multithreading refers to the execution of multiple threads within a single process
+CoreJava.Multithreading.CoreJava.Multithreading refers to the execution of multiple threads within a single process
 concurrently.
 Example: A browser may use separate threads for rendering pages, executing JavaScript,
 and handling user input, making it more responsive and efficient.
-Multithreading.Multithreading improves efficiency by dividing a task into smaller sub-tasks
+CoreJava.Multithreading.CoreJava.Multithreading improves efficiency by dividing a task into smaller sub-tasks
 (threads) that can run concurrently, making better use of CPU resources.
 
 
@@ -78,7 +78,7 @@ members working on different parts of the same project (multithreading).
 
 
 MULTITHREADING IN JAVA :
-Multithreading.Multithreading in Java is the execution of two or more threads to maximize CPU utilization.
+CoreJava.Multithreading.CoreJava.Multithreading in Java is the execution of two or more threads to maximize CPU utilization.
 Java’s multithreading support is part of the java.lang package. [ JAVA.LANG.THREAD class
 and JAVA.LANG.RUNNABLE Interface ] .
 In a single-core environment, Java threads are managed by the JVM and OS using

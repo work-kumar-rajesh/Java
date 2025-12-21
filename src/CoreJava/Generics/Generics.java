@@ -1,6 +1,4 @@
-package Generics;
-
-import java.util.*;
+package CoreJava.Generics;
 
 /*
 ========================================================================================
@@ -9,7 +7,7 @@ import java.util.*;
 
 WHAT ARE GENERICS?
 
-- Generics allow you to write code that works with **different types** without losing **type safety**.
+- CoreJava.Generics allow you to write code that works with **different types** without losing **type safety**.
 - Before generics:
     - We used Object for everything.
     - Needed explicit casting.
@@ -329,7 +327,7 @@ class RawTypeDemo {
                                 TYPE ERASURE
 ========================================================================================
 
-- Generics exist only at compile time.
+- CoreJava.Generics exist only at compile time.
 - At runtime: Box<String> and Box<Integer> both become Box.
 - Cannot use `instanceof T` or `new T()`.
 
@@ -353,7 +351,7 @@ class TypeErasureDemo<T> {
 ========================================================================================
 
 - Arrays know their element type at runtime.
-- Generics lose type information at runtime.
+- CoreJava.Generics lose type information at runtime.
 - Creating generic arrays is **not allowed**.
 - Safe workaround: use Object[] or wildcard arrays.
 
@@ -379,7 +377,7 @@ class GenericArrayDemo {
                                 GENERICS AND PRIMITIVES
 ========================================================================================
 
-- Generics work only with reference types.
+- CoreJava.Generics work only with reference types.
 - Use wrapper classes instead of primitives.
 
 Example:
@@ -397,15 +395,15 @@ class GenericsPrimitivesDemo {
                                 FINAL SUMMARY
 ========================================================================================
 
-1. Generics provide compile-time type safety
+1. CoreJava.Generics provide compile-time type safety
 2. <T> defines and owns a type
 3. ? represents an unknown type
-4. Generics are invariant
+4. CoreJava.Generics are invariant
 5. ? extends is for reading
 6. ? super is for writing
 7. Plain ? is for inspection only
 8. Avoid raw types
-9. Generics use type erasure
+9. CoreJava.Generics use type erasure
 10. Avoid arrays with generics
 11. PECS: Producer Extends, Consumer Super
 12. Always prefer wrappers for primitives
