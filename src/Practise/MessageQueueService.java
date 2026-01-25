@@ -1,6 +1,5 @@
-package design;
+package Practise;
 
-import java.util.*;
 import java.util.concurrent.*;
 
 public class MessageQueueService {
