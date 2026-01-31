@@ -6,7 +6,6 @@ public class Dijkstra {
     /**
      * Dijkstra's Algorithm
      * Input: adj - adjacency list where adj[u] contains pairs {v, weight}
-     *        source - starting vertex
      * Graph Type: Directed or Undirected
      * Cyclic or Acyclic: Works for both
      * Weights: Non-negative only (Dijkstra cannot handle negative weights)
